@@ -1,7 +1,7 @@
 # EdgeProbe — whisper CI demo
 
 This repo simulates a **whisper.cpp maintainer** using
-[EdgeProbe](https://github.com/jinweihan93-ops/edge-probe) as a CI
+[EdgeProbe](https://github.com/jinweihan-ai/edge-probe) as a CI
 check. Every PR here:
 
 1. synthesizes a trace from `params.json` (deterministic pure function)
@@ -85,5 +85,5 @@ on their next workflow run (push any commit to the branch, or hit
 
 ## Related
 
-- **[EdgeProbe main repo](https://github.com/jinweihan93-ops/edge-probe)** — the Swift SDK, backend, dashboard, and the Action itself live there
-- **[Action code](https://github.com/jinweihan93-ops/edge-probe/tree/action-v0.1.0/action)** — pinned at the tag this demo uses
+- **[EdgeProbe main repo](https://github.com/jinweihan-ai/edge-probe)** — the Swift SDK, backend, dashboard, and the Action itself live there
+- **[Action code](https://github.com/jinweihan-ai/edge-probe/tree/action-v0.1.0/action)** — pinned at the tag this demo uses

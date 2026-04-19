@@ -5,7 +5,7 @@ This repo simulates a **whisper.cpp maintainer** using
 check. Every PR here:
 
 1. synthesizes a trace from `params.json` (deterministic pure function)
-2. runs the EdgeProbe Action pinned at `action-v0.1.0`
+2. runs the EdgeProbe Action pinned at `action-v0.1.1`
 3. sticky-comments the rendered verdict
 
 Three demo PRs are **permanently open** — point and click to see what

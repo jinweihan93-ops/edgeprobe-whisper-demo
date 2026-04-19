@@ -2,7 +2,7 @@
 #
 # What it does on every PR:
 #   1. synthesize a trace from params.json  (pure function, deterministic)
-#   2. run the EdgeProbe Action (pinned to jinweihan93-ops/edge-probe@action-v0.1.0)
+#   2. run the EdgeProbe Action (pinned to jinweihan93-ops/edge-probe@action-v0.1.1)
 #   3. sticky-comment the rendered PR comment
 #
 # fail-on-regression is deliberately `false`:
@@ -63,13 +63,17 @@ jobs:
 
       - name: EdgeProbe
         id: edgeprobe
-        uses: jinweihan93-ops/edge-probe/action@action-v0.1.0
+        uses: jinweihan93-ops/edge-probe/action@action-v0.1.1
         with:
           trace-file: trace.json
           baseline-file: ${{ steps.synth.outputs.baseline }}
           threshold: "0.15"
           fail-on-regression: "false"
           backend-url: https://edgeprobe-staging.fly.dev
+          # dashboard-url makes share links in the PR comment resolve to the
+          # HTML trace viewer (web/) instead of the backend's raw JSON. Added
+          # in action-v0.1.1 — v0.1.0 silently ignored this input.
+          dashboard-url: https://edgeprobe-web-staging.fly.dev
           ingest-key: ${{ secrets.EDGEPROBE_INGEST_KEY }}
           dashboard-key: ${{ secrets.EDGEPROBE_DASHBOARD_KEY }}
           org-id: org_demo

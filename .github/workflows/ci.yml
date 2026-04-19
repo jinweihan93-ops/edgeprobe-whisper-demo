@@ -2,7 +2,7 @@
 #
 # What it does on every PR:
 #   1. synthesize a trace from params.json  (pure function, deterministic)
-#   2. run the EdgeProbe Action (pinned to jinweihan93-ops/edge-probe@action-v0.1.1)
+#   2. run the EdgeProbe Action (pinned to jinweihan-ai/edge-probe@action-v0.1.1)
 #   3. sticky-comment the rendered PR comment
 #
 # fail-on-regression is deliberately `false`:
@@ -63,7 +63,7 @@ jobs:
 
       - name: EdgeProbe
         id: edgeprobe
-        uses: jinweihan93-ops/edge-probe/action@action-v0.1.1
+        uses: jinweihan-ai/edge-probe/action@action-v0.1.1
         with:
           trace-file: trace.json
           baseline-file: ${{ steps.synth.outputs.baseline }}

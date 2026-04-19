@@ -133,7 +133,7 @@ function synthesize(params: Params): TraceSummary {
     )
     // Stage keys match the Action's hardcoded column schema
     // (whisper | prefill | decode — see action/src/comment.ts in
-    // jinweihan93-ops/edge-probe @ action-v0.1.0). For a whisper-only
+    // jinweihan-ai/edge-probe @ action-v0.1.0). For a whisper-only
     // benchmark the encoder maps to the `whisper` column and the text
     // decoder maps to the `decode` column; `prefill` stays empty because
     // there's no LLM prefill phase here. When the Action renderer goes

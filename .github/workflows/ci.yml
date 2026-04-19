@@ -63,7 +63,7 @@ jobs:
 
       - name: EdgeProbe
         id: edgeprobe
-        uses: jinweihan93-ops/edge-probe/action@action-v0.1.1
+        uses: jinweihan93-ops/edge-probe/action@action-v0.1.2
         with:
           trace-file: trace.json
           baseline-file: ${{ steps.synth.outputs.baseline }}

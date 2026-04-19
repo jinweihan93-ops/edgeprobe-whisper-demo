@@ -1,0 +1,7 @@
+# Local test artifacts from `bun run bin/synthesize.ts > /tmp/trace.json`
+trace.json
+/tmp/
+*.log
+
+# OS
+.DS_Store

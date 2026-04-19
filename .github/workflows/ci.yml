@@ -1,0 +1,83 @@
+# EdgeProbe demo workflow.
+#
+# What it does on every PR:
+#   1. synthesize a trace from params.json  (pure function, deterministic)
+#   2. run the EdgeProbe Action (pinned to jinweihan93-ops/edge-probe@action-v0.1.0)
+#   3. sticky-comment the rendered PR comment
+#
+# fail-on-regression is deliberately `false`:
+#   this is a demo. The PR *should* be mergeable even when the comment is
+#   red — otherwise the regression PR would be stuck in "CI failed" purgatory.
+#   The point is to show the comment, not to gate merges.
+#
+# backend-url points at EdgeProbe's live staging. Repo secrets required:
+#   EDGEPROBE_INGEST_KEY     (epk_pub_...)
+#   EDGEPROBE_DASHBOARD_KEY  (epk_priv_...)
+# For PRs opened from forks, secrets are unavailable — the Action silently
+# downgrades to no-share-URL mode.
+
+name: EdgeProbe demo
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: read
+
+concurrency:
+  group: edgeprobe-demo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  demo:
+    name: EdgeProbe demo comment
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Synthesize trace from params.json
+        id: synth
+        run: |
+          set -euo pipefail
+          bun run bin/synthesize.ts > trace.json
+          echo "── trace.json ──"
+          cat trace.json
+          echo
+
+          # First-run demo branches delete the baseline file on purpose so
+          # the Action renders the first-run variant instead of diffing.
+          if [ -f baselines/main.json ]; then
+            echo "baseline=baselines/main.json" >> "$GITHUB_OUTPUT"
+          else
+            echo "baseline=" >> "$GITHUB_OUTPUT"
+            echo "── no baseline present; Action will render first-run variant"
+          fi
+
+      - name: EdgeProbe
+        id: edgeprobe
+        uses: jinweihan93-ops/edge-probe/action@action-v0.1.0
+        with:
+          trace-file: trace.json
+          baseline-file: ${{ steps.synth.outputs.baseline }}
+          threshold: "0.15"
+          fail-on-regression: "false"
+          backend-url: https://edgeprobe-staging.fly.dev
+          ingest-key: ${{ secrets.EDGEPROBE_INGEST_KEY }}
+          dashboard-key: ${{ secrets.EDGEPROBE_DASHBOARD_KEY }}
+          org-id: org_demo
+          project-id: proj_whisper_upstream
+
+      - name: Sticky PR comment
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: edgeprobe
+          message: ${{ steps.edgeprobe.outputs.comment }}
